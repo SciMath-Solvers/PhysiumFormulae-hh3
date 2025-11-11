@@ -12,9 +12,19 @@ APP_VERSION("1.0.0")
 
 
 
-void Print(int x, int y, const char* text){
-  Debug_Printf(x,y,false,0,"%s", text);
-  LCD_Refresh();
+void Print(int x, int y, const char* text, int *zero = nullptr){
+	if(zero == nullptr && (x < 8) && (y < 12)) {
+  	Debug_Printf(x,y,false,0,"%s", text);
+  	LCD_Refresh();
+	} else if( zero != nullptr) {
+		Debug_Printf(x,y,false,0,"%s", text);
+  	LCD_Refresh();
+	} else {
+		Debug_Printf(1,11,false,0,"%s", "Code ERROR");
+		Debug_Printf(1,8,false,0,"%s", "Report Issue to:");
+		Debug_Printf(1,9,false,0,"%s", "@PhysForm");
+		LCD_Refresh();
+	}
 }
 
 char* dtstr(double value, char* buffer, int precision = 1000000000) {
@@ -159,7 +169,7 @@ double Input(){
 							}break;
 						case KEYCODE_KEYBOARD: 
 							UPD();
-							Debug_PrintString("ERROR! ", 0);
+							Print(1,1,"ERROR! ");
 							return 0;
 						case KEYCODE_SHIFT: 
 							return 0;
@@ -176,16 +186,15 @@ double Input(){
 
 void cls(){
 	LCD_ClearScreen();
+	fillScreen(0xFFFF);
 }
 
 
 int main() {
     	fillScreen(0xFFFF);
   		UPD();
-  		Debug_SetCursorPosition(6,2);
-		Debug_PrintString("Physium Formulae",0);
-		Debug_SetCursorPosition(6,3);
-		Debug_PrintString("ClassPad",0);
+		Print(6,2,"Physium Formulae");
+		Print(6,3,"ClassPad");
 		UPD();
 		while(true){
     		uint32_t key1, key2;    // First create variables
@@ -199,14 +208,10 @@ int main() {
 		}
 		fillScreen(0xFFFF);
 		UPD();
-		Debug_SetCursorPosition(0,0);
-  		Debug_PrintString("Physium Formulae\nClassPad", 0);
-		Debug_SetCursorPosition(6,1);
-		Debug_PrintString("[1] Solver",0);
-		Debug_SetCursorPosition(6,2);
-		Debug_PrintString("[2] Formulas",0);
-		Debug_SetCursorPosition(6,3);
-		Debug_PrintString("[3] Exit",0);
+  		Print(1,1,"Physium Formulae\nClassPad");
+		Print(6,1,"[1] Solver");
+		Print(6,2,"[2] Formulas");
+		Print(6,3,"[3] Exit");
 		UPD();
 		uint32_t Menukey, MenKey;
 		getKey(&Menukey, &MenKey);
@@ -214,17 +219,15 @@ int main() {
 		if(Menukey == KEY_1){
 			fillScreen(0xFFFF);
 			UPD();
-			Debug_SetCursorPosition(1,0);
-      		Debug_PrintString("Physium Formulae\nClassPad", 0);
+      		Print(1,1,"Physium Formulae\nClassPad");
 			uint32_t k1, k2;
 			getKey(&k1, &k2);
 			Print(1,3,"Main Solver Menu");
 			Print(1,5,"[1] GPE  GPE = m*g*h");
-			Print(1,6,"[2] Force F = m*a ");
-			Print(1,7,"[3] Fg = m*g");
-			Print(1,8,"[4] Momentum = m*v");
-			Print(1,9,"[5] Basic Work = F*d");
-			Print(1,10,"[6] Work = F*d* cos(theta)"); 
+			Print(1,6,"[2] Force F = m * a ");
+			Print(1,8,"[3] Momentum = m * v");
+			Print(1,9,"[4] Basic Work = F * d");
+			Print(1,10,"[5] Work = F * d * cos(theta)"); 
 			UPD();
 			uint32_t SMenukey;
 			uint32_t Skey;
@@ -232,18 +235,12 @@ int main() {
 			UPD();
 			cls();
 			if(SMenukey == KEY_1){
-      			Debug_SetCursorPosition(0,160);
-      			Debug_PrintString("Physium Formulae\nClassPad", 0);
-				Debug_SetCursorPosition(6,0);
-				Debug_PrintString("GPE Solver Submenu",0);
-				Debug_SetCursorPosition(6,1);
-				Debug_PrintString("[1] GPE",0);
-				Debug_SetCursorPosition(6,2);
-				Debug_PrintString("[2] Mass",0);
-				Debug_SetCursorPosition(6,3);
-				Debug_PrintString("[3] Acceleration to Gravity",0);
-				Debug_SetCursorPosition(6,4);
-				Debug_PrintString("[4] Height",0);
+      	Print(1,1,"Physium Formulae\nClassPad");
+				Print(6,3,"GPE Solver Submenu");
+				Print(6,4,"[1] GPE",0);
+				Print(6,5,"[2] Mass",0);
+				Print(6,6,"[3] Acceleration to Gravity",0);
+				Print(6,7,"[4] Height",0);
 				UPD();
 				uint32_t GPEKey;
 				uint32_t ConfGPE;
@@ -276,26 +273,22 @@ int main() {
 						}
 					}
 				}else if(GPEKey == KEY_2){
-        			Debug_SetCursorPosition(0,160);
-        			Debug_PrintString("Physium Formulae\nClassPad", 0);
+        			Print(1,1,"Physium Formulae\nClassPad", 0);
 					Print(1,1,"GPE=?");
 					UPD();
 					double GPE = Input();
         			cls();
-	        		Debug_SetCursorPosition(0,160);
-    	    		Debug_PrintString("Physium Formulae\nClassPad", 0);
-	        		Print(1,1,"Acceleration to Gravity\ng on earth is ~9.8 m/s^2\n& is exactly 9.80665 m/s^2");
+    	    		Print(1,1,"Physium Formulae\nClassPad", 0);
+	        		Print(1,3,"Acceleration to \nGravity g on earth is ~9.8 m/s^2\n& is exactly 9.80665 m/s^2");
     	    		UPD();
         			double g = Input();
         			cls();
-        			Debug_SetCursorPosition(0,160);
-        			Debug_PrintString("Physium Formulae\nClassPad", 0);
-        			Print(160,264,"Height=?");
+        			Print(1,1,"Physium Formulae\nClassPad", 0);
+        			Print(1,3,"Height=?");
         			UPD();
         			double h = Input();
         			cls();
-        			Debug_SetCursorPosition(0,160);
-	        		Debug_PrintString("Physium Formulae\nClassPad", 0);
+	        		Print(1,1,"Physium Formulae\nClassPad", 0);
     	    		Print(160,264,"Mass =");
 					double m = (GPE /(g*h));
 					char* Mass = nullptr;
@@ -307,20 +300,17 @@ int main() {
       					break;
 	    			};
 				}else if(GPEKey == KEY_3){
-        			Debug_SetCursorPosition(0,160);
-        			Debug_PrintString("Physium Formulae\nClassPad", 0);
+        			Print(1,1,"Physium Formulae\nClassPad", 0);
         			Print(160,264,"GPE = ?");
 					UPD();
 					double GPE = Input();
 					cls();
-					Debug_SetCursorPosition(0,160);
-        			Debug_PrintString("Physium Formulae\nClassPad", 0);
+        			Print(1,1,"Physium Formulae\nClassPad", 0);
         			Print(160,264,"Mass = ?");
 					UPD();
 					double Mass = Input();
 					cls();
-					Debug_SetCursorPosition(0,160);
-        			Debug_PrintString("Physium Formulae\nClassPad", 0);
+        			Print(1,1,"Physium Formulae\nClassPad", 0);
         			Print(160,264,"Height = ?");
 					UPD();
 					double Height = Input();
@@ -336,8 +326,7 @@ int main() {
 						break;
 	    			};
 				}else if(GPEKey == KEY_4){
-					Debug_SetCursorPosition(0,160);
-					Debug_PrintString("Physium Formulae\nClassPad", 0);
+					Print(1,1,"Physium Formulae\nClassPad", 0);
 					Print(160,264,"GPE = ?");
 					UPD();
 					double GPE = Input();
@@ -363,16 +352,11 @@ int main() {
 				}
 		
 			} else if(SMenukey == KEY_2){
-				Debug_SetCursorPosition(0,160);
-				Debug_PrintString("Physium Formulae\nClassPad", 0);
-				Debug_SetCursorPosition(6,0);
-				Debug_PrintString("Force Solver Submenu",0);
-				Debug_SetCursorPosition(6,1);
-				Debug_PrintString("[1] Force",0);
-				Debug_SetCursorPosition(6,2);
-				Debug_PrintString("[2] Mass",0);
-				Debug_SetCursorPosition(6,3);
-				Debug_PrintString("[3] Acceleration",0);
+				Print(1,1,"Physium Formulae\nClassPad", 0);
+				Print(1,3,"Force Solver Submenu",0);
+				Print(1,4,"[1] Force",0);
+				Print(1,5,"[2] Mass",0);
+				Print(1,6,"[3] Acceleration",0);
 				UPD();
 				uint32_t ForceKey;
 				uint32_t ConfForce;
@@ -401,21 +385,17 @@ int main() {
 						}
 					}
 				}else if(ForceKey == KEY_2){
-
-					Debug_SetCursorPosition(0,160);
-					Debug_PrintString("Physium Formulae\nClassPad", 0);
+					Print(1,1,"Physium Formulae\nClassPad", 0);
 					Print(160,264,"Force=?");
 					UPD();
 					double F = Input();
 					cls();
-	        		Debug_SetCursorPosition(0,160);
-		    		Debug_PrintString("Physium Formulae\nClassPad", 0);
-	        		Print(160,264,"Acceleration?");
-		    		UPD();
+		    	Print(1,1,"Physium Formulae\nClassPad", 0);
+	        Print(160,264,"Acceleration?");
+		    	UPD();
 					double a = Input();
 					cls();
-					Debug_SetCursorPosition(0,160);
-					Debug_PrintString("Physium Formulae\nClassPad", 0);
+					Print(1,1,"Physium Formulae\nClassPad", 0);
 					Print(160,264,"Mass =");
 					double m = F / a;
 					char* MassAns = nullptr;
@@ -427,20 +407,17 @@ int main() {
 						break;
 					};
 				} else if(ForceKey == KEY_3){
-					Debug_SetCursorPosition(0,160);
-					Debug_PrintString("Physium Formulae\nClassPad", 0);
+					Print(1,1,"Physium Formulae\nClassPad", 0);
 					Print(160,264,"Force = ?");
 					UPD();
 					double F = Input();
 					cls();
-					Debug_SetCursorPosition(0,160);
-					Debug_PrintString("Physium Formulae\nClassPad", 0);
+					Print(1,1,"Physium Formulae\nClassPad", 0);
 					Print(160,264,"Mass = ?");
 					UPD();
 					double m = Input();
 					cls();
-					Debug_SetCursorPosition(0,160);
-					Debug_PrintString("Physium Formulae\nClassPad", 0);
+					Print(1,1,"Physium Formulae\nClassPad", 0);
 					Print(160,264,"Acceleration =");
 					double a = F / m;
 					char* AccelAns = nullptr;
@@ -453,92 +430,7 @@ int main() {
 					};
 				}
 			} else if(SMenukey == KEY_3){
-				Debug_SetCursorPosition(0,0);
-				Debug_PrintString("Physium Formulae\nClassPad", 0);
-				Print(2,264,"Force of Gravity Solver Submenu");
-				Print(2,281,"[1] Force of Gravity Fg");
-				Print(2,298,"[2] Mass");
-				Print(2,315,"[3] Acceleration to Gravity");
-				UPD();
-				uint32_t FgKey;
-				uint32_t ConfFg;
-				getKey(&FgKey, &ConfFg);
-				cls();
-				if(FgKey == KEY_1){
-					cls();
-					Print(160,264,"Mass?");
-					UPD();
-					double m = Input();
-					cls();
-					Print(160,264,"Acceleration to Gravity\ng on earth is ~9.8 m/s^2\n& is exactly 9.80665 m/s^2");
-					UPD();
-					double g = Input();
-					double Fg = m * g;
-					cls();
-					char* FgAns = nullptr;
-					Print(160,150,"Force of Gravity = ");
-					Print(160,264,dtstr(Fg,FgAns));
-					UPD();
-					while(true){
-						uint32_t key1, key2;    // First create variables
-						getKey(&key1, &key2);    // then read the keys
-						if(testKey(key1, key2, KEY_EXE)){ // Use testKey() to test if a specific key is pressed 
-							break;
-						}
-					}
-				} else if(FgKey == KEY_2){
-					Debug_SetCursorPosition(0,160);
-					Debug_PrintString("Physium Formulae\nClassPad", 0);
-					Print(160,264,"Force of Gravity=?");
-					UPD();
-					double Fg = Input();
-					cls();
-	        		Debug_SetCursorPosition(0,160);
-		    		Debug_PrintString("Physium Formulae\nClassPad", 0);
-	        		Print(160,264,"Acceleration to Gravity\ng on earth is ~9.8 m/s^2\n& is exactly 9.80665 m/s^2");
-		    		UPD();
-					double g = Input();
-					cls();
-					Debug_SetCursorPosition(0,160);
-					Debug_PrintString("Physium Formulae\nClassPad", 0);
-					Print(160,264,"Mass =");
-					double m = Fg / g;
-					char* MassFgAns = nullptr;
-					Print(160,264,dtstr(m,MassFgAns));
-					UPD();
-					while(true){
-		  				uint32_t key1, key2;    // First create variables
-	  					getKey(&key1, &key2);    // then read the
-					}
-				} else if(FgKey == KEY_3){
-					Debug_SetCursorPosition(0,160);
-					Debug_PrintString("Physium Formulae\nClassPad", 0);
-					Print(160,264,"Force of Gravity = ?");
-					UPD();
-					double Fg = Input();
-					cls();
-					Debug_SetCursorPosition(0,160);
-					Debug_PrintString("Physium Formulae\nClassPad", 0);
-					Print(160,264,"Mass = ?");
-					UPD();
-					double m = Input();
-					cls();
-					Debug_SetCursorPosition(0,160);
-					Debug_PrintString("Physium Formulae\nClassPad", 0);
-					Print(160,264,"Acceleration to Gravity =");
-					double g = Fg / m;
-					char* AccelFgAns = nullptr;
-					Print(160,264,dtstr(g,AccelFgAns));
-					UPD();
-					while(true){
-						uint32_t key1, key2;    // First create variables
-						getKey(&key1, &key2);    // then read the keys
-						break;
-					}
-				}
-			} else if(SMenukey == KEY_4){
-				Debug_SetCursorPosition(0,160);
-				Debug_PrintString("Physium Formulae\nClassPad", 0);
+				Print(1,1,"Physium Formulae\nClassPad", 0);
 				Print(160,264,"Momentum Solver Submenu");
 				Print(160,264+17,"[1] Momentum");
 				Print(160,264+17+17,"[2] Mass");
@@ -567,20 +459,17 @@ int main() {
 						break;
 					}
 				} else if(pKey == KEY_2){
-					Debug_SetCursorPosition(0,160);
-					Debug_PrintString("Physium Formulae\nClassPad", 0);
+					Print(1,1,"Physium Formulae\nClassPad", 0);
 					Print(160,264,"Momentum=?");
 					UPD();
 					double p = Input();
 					cls();
-					Debug_SetCursorPosition(0,160);
-					Debug_PrintString("Physium Formulae\nClassPad", 0);
+					Print(1,1,"Physium Formulae\nClassPad", 0);
 					Print(160,264,"Velocity?");
 					UPD();
 					double v = Input();
 					cls();
-					Debug_SetCursorPosition(0,160);
-					Debug_PrintString("Physium Formulae\nClassPad", 0);
+					Print(1,1,"Physium Formulae\nClassPad", 0);
 					Print(160,264,"Mass =");
 					double m = p / v;
 					char* MasspAns = nullptr;
@@ -592,20 +481,17 @@ int main() {
 						break;
 					}
 				} else if(pKey == KEY_3){
-					Debug_SetCursorPosition(0,160);
-					Debug_PrintString("Physium Formulae\nClassPad", 0);
+					Print(1,1,"Physium Formulae\nClassPad", 0);
 					Print(160,264,"Momentum = ?");
 					UPD();
 					double p = Input();
 					cls();
-					Debug_SetCursorPosition(0,160);
-					Debug_PrintString("Physium Formulae\nClassPad", 0);
+					Print(1,1,"Physium Formulae\nClassPad", 0);
 					Print(160,264,"Mass = ?");
 					UPD();
 					double m = Input();
 					cls();
-					Debug_SetCursorPosition(0,160);
-					Debug_PrintString("Physium Formulae\nClassPad", 0);
+					Print(1,1,"Physium Formulae\nClassPad", 0);
 					Print(160,264,"Velocity =");
 					double v = p / m;
 					char* VelAns = nullptr;
@@ -618,8 +504,7 @@ int main() {
 					}
 				}
 			} else if(SMenukey == KEY_5){
-				Debug_SetCursorPosition(0,160);
-				Debug_PrintString("Physium Formulae\nClassPad", 0);
+				Print(1,1,"Physium Formulae\nClassPad", 0);
 				Print(160,264,"Basic Work Solver Submenu");
 				Print(160,264+17,"[1] Basic Work");
 				Print(160,264+34+17,"[2] Force");
@@ -649,8 +534,7 @@ int main() {
 						break;
 					}
 				} else if(WorkKey == KEY_2){
-					Debug_SetCursorPosition(0,160);
-					Debug_PrintString("Physium Formulae\nClassPad", 0);
+					Print(1,1,"Physium Formulae\nClassPad", 0);
 					Print(160,264,"Work=?");
 					UPD();
 					double W = Input();
@@ -659,8 +543,7 @@ int main() {
 		    		UPD();
 					double d = Input();
 					cls();
-	        		Debug_SetCursorPosition(0,160);
-		    		Debug_PrintString("Physium Formulae\nClassPad", 0);
+		    		Print(1,1,"Physium Formulae\nClassPad", 0);
 	        		Print(160,264,"Force =");
 		    		double F = W / d;
 					char* ForceAns = nullptr;
@@ -672,20 +555,17 @@ int main() {
 						break;
 					}
 				}else if(WorkKey == KEY_3){
-					Debug_SetCursorPosition(0,160);
-					Debug_PrintString("Physium Formulae\nClassPad", 0);
+					Print(1,1,"Physium Formulae\nClassPad", 0);
 					Print(160,264,"Work = ?");
 					UPD();
 					double W = Input();
 					cls();
-					Debug_SetCursorPosition(0,160);
-					Debug_PrintString("Physium Formulae\nClassPad", 0);
+					Print(1,1,"Physium Formulae\nClassPad", 0);
 					Print(160,264,"Force = ?");
 					UPD();
 					double F = Input();
 					cls();
-					Debug_SetCursorPosition(0,160);
-					Debug_PrintString("Physium Formulae\nClassPad", 0);
+					Print(1,1,"Physium Formulae\nClassPad", 0);
 					Print(160,264,"Distance =");
 					double d = W / F;
 					char* DistAns = nullptr;
@@ -698,8 +578,7 @@ int main() {
 					}
 				}
 			} else if(SMenukey == KEY_6){
-				Debug_SetCursorPosition(0,160);
-				Debug_PrintString("Physium Formulae\nClassPad", 0);
+				Print(1,1,"Physium Formulae\nClassPad", 0);
 				Print(160,264,"Work Solver Submenu");
 				Print(160,264+17,"[1] Work");
 				Print(160,264+34+17,"[2] Force");
@@ -722,7 +601,7 @@ int main() {
 					Print(160,264,"Angle in degrees?");
 					UPD();
 					double angle = Input();
-					double radian = angle * (3.14159265358979323846 / 180.0); // Convert degrees to radians
+					double radian = angle * (3.1415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421170679821480865132823066470938446095505822317253594081284811174502841027019385211055596446229489549303819644288109756659334461284756482337867831652712019091456485669234603486104543266482133936072602491412737245870066063155881748815209209628292540917153643678925903600113305305488204665213841469519415116094330572703657595919530921861173819326117931051185480744623799627495673518857527248912279381830119491298336733624406566430860213949463952247371907021798609437027705392171762931767523846748184676694051320005681271452635608277857713427577896091736371787214684409012249534301465495853710507922796892589235420199561121290219608640344181598136297747713099605187072113499999983729780499510597317328160963185950244594553469083026425223082533446850352619311881710100031378387528865875332083814206171776691473035982534904287554687311595628638823537875937519577818577805321712268066130019278766111959092164201989 / 180.0); // Convert degrees to radians
 					double cosValue = cos(radian);
 					double W = F * d * cosValue;
 					cls();
@@ -736,16 +615,14 @@ int main() {
 						break;
 					}
 				} else if(WorkKey == KEY_2){
-					Debug_SetCursorPosition(0,160);
-					Debug_PrintString("Physium Formulae\nClassPad", 0);
+					Print(1,1,"Physium Formulae\nClassPad", 0);
 					Print(160,264,"Work=?");
 					UPD();
 					double W = Input();
 					cls();
-	        		Debug_SetCursorPosition(0,160);
-		    		Debug_PrintString("Physium Formulae\nClassPad", 0);
-	        		Print(160,264,"Distance=?");
-		    		UPD();
+		    	Print(1,1,"Physium Formulae\nClassPad", 0);
+	      	Print(160,264,"Distance=?");
+		    	UPD();
 					double d = Input();
 					cls();
 	        		Print(160,264,"Angle in degrees?");
@@ -754,10 +631,9 @@ int main() {
 					double radian = theta * (3.14159265358979323846 / 180.0); // Convert degrees to radians
 					double cosValue = cos(radian);
 					cls();
-	        		Debug_SetCursorPosition(0,160);
-		    		Debug_PrintString("Physium Formulae\nClassPad", 0);
-	        		Print(160,264,"Force =");
-		    		double F = W / (d * cosValue);
+		    	Print(1,1,"Physium Formulae\nClassPad", 0);
+	    		Print(160,264,"Force =");
+	    		double F = W / (d * cosValue);
 					char* ForceAns = nullptr;
 					Print(160,264,dtstr(F,ForceAns));
 					UPD();
@@ -767,20 +643,17 @@ int main() {
 						break;
 					}
 				}else if(WorkKey == KEY_3){
-					Debug_SetCursorPosition(0,160);
-					Debug_PrintString("Physium Formulae\nClassPad", 0);
+					Print(1,1,"Physium Formulae\nClassPad", 0);
 					Print(160,264,"Work = ?");
 					UPD();
 					double W = Input();
 					cls();
-					Debug_SetCursorPosition(0,160);
-					Debug_PrintString("Physium Formulae\nClassPad", 0);
+					Print(1,1,"Physium Formulae\nClassPad", 0);
 					Print(160,264,"Force = ?");
 					UPD();
 					double F = Input();
 					cls();
-					Debug_SetCursorPosition(0,160);
-					Debug_PrintString("Physium Formulae\nClassPad", 0);
+					Print(1,1,"Physium Formulae\nClassPad", 0);
 					Print(160,264,"Distance =");
 	        		Print(160,264+17,"Angle in degrees?");
 		    		UPD();
@@ -798,26 +671,22 @@ int main() {
 						break;
 					}
 				} else if(WorkKey == KEY_4){
-	        		Debug_SetCursorPosition(0,160);
-		    		Debug_PrintString("Physium Formulae\nClassPad", 0);
+		    		Print(1,1,"Physium Formulae\nClassPad", 0);
 	        		Print(160,264,"Work = ?");
 		    		UPD();
 		    		double W = Input();
 		    		cls();
-		    		Debug_SetCursorPosition(0,160);
-		    		Debug_PrintString("Physium Formulae\nClassPad", 0);
+		    		Print(1,1,"Physium Formulae\nClassPad", 0);
 		    		Print(160,264,"Force = ?");
 		    		UPD();
 		    		double F = Input();
 		    		cls();
-		    		Debug_SetCursorPosition(0,160);
-		    		Debug_PrintString("Physium Formulae\nClassPad", 0);
+		    		Print(1,1,"Physium Formulae\nClassPad", 0);
 		    		Print(160,264,"Distance = ?");
 		    		UPD();
 		    		double d = Input();
 		    		cls();
-	        		Debug_SetCursorPosition(0,160);
-		    		Debug_PrintString("Physium Formulae\nClassPad", 0);
+		    		Print(1,1,"Physium Formulae\nClassPad", 0);
 		    		Print(160,264,"Angle in degrees =");
 		    		UPD();
 		    		double radian = cos(W / (F * d)); // Calculate the angle in radians
@@ -832,10 +701,8 @@ int main() {
 					}
 				}
 			} else if(SMenukey == KEY_3){
-				Debug_SetCursorPosition(0,160);
-				Debug_PrintString("Physium Formulae\nClassPad", 0);
-				Debug_SetCursorPosition(6,0);
-				Debug_PrintString("NEW IDEA COMING SOON!",0);
+				Print(1,1,"Physium Formulae\nClassPad", 0);
+				Print(1,1,"NEW IDEA COMING SOON!",0);
 				UPD();
 				while(true){
 					uint32_t key1, key2;    // First create variables
@@ -845,10 +712,8 @@ int main() {
 			}
 		}else if (Menukey == KEY_2){
 			cls();
-	    	Debug_SetCursorPosition(0,160);
-    		Debug_PrintString("Physium Formulae\nClassPad", 0);
-    		Debug_SetCursorPosition(160,0);
-			Debug_PrintString("Formulas",0);
+    		Print(1,1,"Physium Formulae\nClassPad", 0);
+			Print(1,1,"Formulas",0);
 			Print(0,527,"WIP");
 			Print(160,40,"GPE = mass * accel. to grav. * height");
 			Print(160,80,"F = Mass * Acceleration");
@@ -861,32 +726,14 @@ int main() {
 				break;
 			};
 		}else if (Menukey == KEY_3){
-    		Debug_SetCursorPosition(0,160);
-    		Debug_PrintString("Physium Formulae\nClassPad", 0);
-    		Debug_SetCursorPosition(264,160);
-    		Debug_PrintString("Program Terminating...",0);
+    		Print(1,1,"Physium Formulae\nClassPad", 0);
+    		Print(1,3,"Program Terminating...",0);
     		UPD();
 			while(true){
+				cls();
 				break;
 			}
 		}
-						
-			//if(testkey(SMenukey, KEY_1)){
-			//	Debug_PrintString("GPE Solver Submenu");
-			//	Debug_PrintString("[1] GPE");const char *string
-			//	Debug_PrintString("[2] Mass");
-			//	Debug_PrintString("[3] Acceleration to Gravity");
-			//	Debug_PrintString("[4] Height");
-			//	uint32_t GPEKey;
-			//	getkey(&GPEKey);
-			//	if(testkey())
-			//	}
-		//case KEY_2:
-		//	Debug_PrintString(" Not Complete!",1);
-		//	return 0;
-		//case KEY_3:
-		//	return 0;
-
 		UPD();
 		cls();
   Debug_WaitKey();
