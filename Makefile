@@ -1,6 +1,6 @@
 SOURCEDIR = src
 BUILDDIR = obj
-OUTDIR = dist
+OUTDIR = builds
 DEPDIR = .deps
 
 AS:=sh4a_nofpueb-elf-gcc
